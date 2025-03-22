@@ -1,6 +1,9 @@
 # PP量化交易系统
 
+## 系统介绍
+
 这是一个简单易用的量化交易系统，可以帮助您：
+
 - 自动获取股票数据
 - 运行交易策略
 - 进行回测分析
@@ -28,84 +31,170 @@
    - 实时风险控制
    - 交易记录追踪
 
-## 快速开始
+## 快速入门
 
 ### 第一步：安装系统
 
 1. 下载系统
-```bash
-git clone https://github.com/ppswdev/pp_quant_trade.git
-cd pp_quant_trade
-```
+   - 访问 [GitHub仓库](https://github.com/ppswdev/pp_quant_trade)
+   - 点击"Download"下载系统
+   - 解压到您想要的目录
 
-2. 安装Python环境
-   - 访问 [Python官网](https://www.python.org/downloads/) 下载并安装Python 3.8或更高版本
-   - 安装时请勾选"Add Python to PATH"选项
+2. 安装Python
+   - 访问 [Python官网](https://www.python.org/downloads/)
+   - 下载Python 3.8或更高版本
+   - 运行安装程序
+   - 重要：安装时请勾选"Add Python to PATH"选项
 
-3. 安装系统依赖
-```bash
-# Windows系统：
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
+3. 安装系统
+   - 打开命令行（终端）
+   - 进入系统目录
+   - 运行以下命令：
 
-# Mac/Linux系统：
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+   ```bash
+   # Windows系统：
+   python -m venv venv
+   venv\Scripts\activate
+   pip install -r requirements.txt
+
+   # Mac/Linux系统：
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
 
 ### 第二步：配置系统
 
-1. 配置数据源
-   - 打开 `config/data_config.yaml`
-   - 填入您的数据源账号信息（如Tushare的token）
+1. 创建配置文件
 
-2. 配置券商接口
-   - 打开 `config/broker_config.yaml`
-   - 填入您的券商账号信息
+   ```bash
+   # 复制配置文件模板
+   cp config/config.yaml.template config/config.yaml
+   ```
 
-3. 选择交易策略
-   - 打开 `config/strategy_config.yaml`
-   - 选择您想使用的策略
-   - 调整策略参数
+2. 修改配置
+   - 打开 `config/config.yaml` 文件
+   - 根据您的需求修改以下配置：
+     - 数据源配置（Tushare、AkShare等）
+     - 券商接口配置（XTP、通达信等）
+     - 交易策略参数
+     - 风控参数
+     - 回测参数
+     - 日志设置
+   - 保存文件
 
-### 第三步：运行系统
+### 第三步：使用系统
 
 1. 运行回测（推荐先进行回测）
-```bash
-# 运行均线交叉策略的回测
-python -m src.backtest.run_backtest --strategy ma_cross --start_date 2020-01-01 --end_date 2023-12-31
-```
+
+   ```bash
+   # 运行均线交叉策略的回测
+   python -m src.backtest.run_backtest --strategy ma_cross --start_date 2020-01-01 --end_date 2023-12-31
+   ```
 
 2. 查看回测结果
-   - 系统会自动生成回测报告
-   - 可以在 `results/` 目录下查看详细报告
-   - 使用浏览器打开 `results/backtest_report.html` 查看可视化报告
+   - 打开 `results/backtest_report.html` 查看回测报告
+   - 查看 `results/` 目录下的其他分析文件
 
 3. 实盘交易（确认回测效果后再进行）
-```bash
-# 使用均线交叉策略进行实盘交易
-python -m src.trading.run_trading --strategy ma_cross --broker xtp
-```
+
+   ```bash
+   # 使用均线交叉策略进行实盘交易
+   python -m src.trading.run_trading --strategy ma_cross --broker xtp
+   ```
+
+## 内置策略说明
+
+### 1. 均线交叉策略
+
+- 原理：短期均线上穿长期均线时买入，下穿时卖出
+- 参数设置：
+  - 短期均线周期（默认5天）
+  - 长期均线周期（默认20天）
+  - 交易数量
+
+### 2. 突破策略
+
+- 原理：价格突破上轨时买入，突破下轨时卖出
+- 参数设置：
+  - 计算周期（默认20天）
+  - 突破阈值
+  - 交易数量
+
+### 3. 均值回归策略
+
+- 原理：价格偏离均值过大时买入，回归均值时卖出
+- 参数设置：
+  - 计算周期（默认20天）
+  - 标准差倍数
+  - 交易数量
+
+## 风险控制
+
+### 1. 资金控制
+
+- 设置最大持仓金额
+- 设置单笔交易限额
+- 设置止损止盈点
+
+### 2. 持仓控制
+
+- 设置最大持仓数量
+- 设置单个股票持仓比例
+- 设置行业持仓比例
+
+### 3. 风险监控
+
+- 监控回撤情况
+- 监控波动率
+- 监控相关性
 
 ## 常见问题
 
-1. 安装问题
-   - 如果安装依赖时出错，请确保网络连接正常
-   - 如果提示权限错误，请使用管理员权限运行命令
+### 1. 安装问题
 
-2. 配置问题
-   - 确保配置文件中的账号信息正确
-   - 检查文件路径是否正确
+- 如果提示"python不是内部或外部命令"，请检查Python是否正确安装
+- 如果安装依赖时出错，请检查网络连接
+- 如果提示权限错误，请使用管理员权限运行命令
 
-3. 运行问题
-   - 确保Python环境已激活（命令提示符前有(venv)）
-   - 检查日志文件了解详细错误信息
+### 2. 配置问题
+
+- 确保已正确复制并修改配置文件
+- 检查配置文件中的账号信息是否正确
+- 确保配置文件格式正确
+
+### 3. 运行问题
+
+- 确保Python环境已激活（命令提示符前有(venv)）
+- 检查日志文件了解详细错误信息
+- 确保所有依赖包都已正确安装
+
+## 使用建议
+
+### 1. 回测阶段
+
+- 选择合适的时间段
+- 调整策略参数
+- 分析回测结果
+- 优化策略设置
+
+### 2. 实盘阶段
+
+- 先用小资金测试
+- 密切监控系统运行
+- 及时处理异常情况
+- 定期检查风险指标
+
+### 3. 日常维护
+
+- 定期更新数据
+- 检查系统日志
+- 备份重要数据
+- 更新依赖包
 
 ## 获取帮助
 
-- 查看详细文档：`docs/` 目录
+- 查看详细文档：`docs/user/` 目录
 - 提交问题：在GitHub上创建Issue
 - 加入讨论：项目Discussions页面
 
@@ -114,10 +203,11 @@ python -m src.trading.run_trading --strategy ma_cross --broker xtp
 - 请妥善保管您的账号信息
 - 实盘交易前请充分测试
 - 建议先使用小资金测试
+- 定期备份重要数据
 
 ## 许可证
 
-本项目使用MIT许可证 - 详见 [LICENSE](LICENSE) 文件。
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ## 更新日志
 
