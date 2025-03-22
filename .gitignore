@@ -169,3 +169,6 @@ data/
 # System Files
 .DS_Store
 Thumbs.db
+
+# Config
+config/config.yaml
