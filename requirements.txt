@@ -1,0 +1,37 @@
+# 数据获取
+tushare>=1.2.89
+akshare>=1.10.0
+ccxt>=4.0.0
+
+# 数据处理和分析
+pandas>=2.0.0
+numpy>=1.24.0
+ta-lib>=0.4.28
+
+# 机器学习
+scikit-learn>=1.3.0
+tensorflow>=2.13.0
+torch>=2.0.0
+
+# 回测系统
+backtrader>=1.9.78.123
+vectorbt>=0.25.4
+
+# 数据库
+psycopg2-binary>=2.9.7
+redis>=4.6.0
+sqlalchemy>=2.0.0
+
+# Web可视化
+streamlit>=1.27.0
+flask>=2.3.0
+plotly>=5.16.0
+
+# 监控和日志
+prometheus-client>=0.17.1
+python-dotenv>=1.0.0
+
+# 工具包
+pytz>=2023.3
+requests>=2.31.0
+websockets>=11.0.3 
