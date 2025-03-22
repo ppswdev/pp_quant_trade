@@ -1,237 +1,148 @@
 # 使用指南
 
-## 1. 系统架构
+## 一、系统简介
 
-### 1.1 核心模块
+这是一个量化交易系统，可以帮助您：
+1. 自动获取股票数据
+2. 运行交易策略
+3. 进行回测分析
+4. 执行实盘交易
 
-- 数据获取模块：负责从不同数据源获取市场数据
-- 因子分析模块：计算技术指标和因子
-- 策略引擎模块：实现交易策略逻辑
-- 回测引擎模块：进行策略回测
-- 券商接口模块：对接不同券商交易接口
-- 性能分析模块：分析策略表现
-- 风险管理模块：控制交易风险
-- 可视化工具：绘制分析图表
-- 日志系统：记录系统运行日志
+## 二、系统架构
 
-### 1.2 数据流
+系统由以下主要部分组成：
+1. 数据获取：从各个数据源获取股票数据
+2. 策略引擎：运行交易策略
+3. 回测系统：进行历史数据回测
+4. 交易系统：执行实盘交易
+5. 风险控制：控制交易风险
+6. 性能分析：分析交易结果
+7. 可视化：展示交易数据
+8. 日志系统：记录系统运行情况
 
-1. 数据获取 → 数据清洗 → 因子计算
-2. 策略信号生成 → 风险控制 → 交易执行
-3. 交易记录 → 性能分析 → 可视化展示
+## 三、使用流程
 
-## 2. 策略开发
+### 1. 获取数据
+1. 选择数据源（如Tushare）
+2. 配置数据源账号
+3. 获取历史数据或实时数据
 
-### 2.1 创建新策略
+### 2. 选择策略
+系统内置多种策略：
+1. 均线交叉策略
+   - 短期均线上穿长期均线时买入
+   - 短期均线下穿长期均线时卖出
 
-1. 在 `src/strategy/` 目录下创建新的策略文件
-2. 继承 `BaseStrategy` 类
-3. 实现必要的方法：
-   - `calculate_indicators`: 计算技术指标
-   - `generate_signals`: 生成交易信号
-   - `on_bar`: 处理K线数据
-   - `on_trade`: 处理交易结果
-   - `risk_check`: 风险检查
+2. 突破策略
+   - 价格突破上轨时买入
+   - 价格突破下轨时卖出
 
-### 2.2 策略示例
+3. 均值回归策略
+   - 价格偏离均值过大时买入
+   - 价格回归均值时卖出
 
-```python
-from src.strategy.base_strategy import BaseStrategy
+### 3. 运行回测
+1. 选择回测时间段
+2. 选择交易策略
+3. 设置初始资金
+4. 运行回测
+5. 查看回测结果
 
-class MyStrategy(BaseStrategy):
-    def __init__(self, params):
-        super().__init__()
-        self.params = params
-        
-    def calculate_indicators(self, data):
-        # 计算技术指标
-        pass
-        
-    def generate_signals(self, data):
-        # 生成交易信号
-        pass
-        
-    def on_bar(self, data):
-        # 处理K线数据
-        pass
-        
-    def on_trade(self, trade):
-        # 处理交易结果
-        pass
-        
-    def risk_check(self):
-        # 风险检查
-        pass
+### 4. 实盘交易
+1. 选择券商接口
+2. 配置交易账户
+3. 设置风险控制参数
+4. 启动交易系统
+5. 监控交易情况
+
+## 四、具体操作
+
+### 1. 运行回测
+```bash
+# 运行均线交叉策略的回测
+python -m src.backtest.run_backtest --strategy ma_cross --start_date 2020-01-01 --end_date 2023-12-31
 ```
 
-## 3. 回测系统
+### 2. 查看回测结果
+- 打开 `results/backtest_report.html` 查看回测报告
+- 查看 `results/` 目录下的其他分析文件
 
-### 3.1 运行回测
-
-```python
-from src.backtest.backtest_engine import BacktestEngine
-from src.strategy.strategy_manager import StrategyManager
-
-# 创建策略管理器
-strategy_manager = StrategyManager()
-strategy_manager.add_strategy('ma_cross', MACrossStrategy(params))
-
-# 创建回测引擎
-engine = BacktestEngine(
-    strategy_manager=strategy_manager,
-    initial_capital=100000,
-    commission_rate=0.0003,
-    slippage=0.0001
-)
-
-# 运行回测
-results = engine.run(
-    start_date='2020-01-01',
-    end_date='2023-12-31',
-    market_data=market_data
-)
+### 3. 实盘交易
+```bash
+# 使用均线交叉策略进行实盘交易
+python -m src.trading.run_trading --strategy ma_cross --broker xtp
 ```
 
-### 3.2 分析回测结果
+## 五、风险控制
 
-```python
-from src.analysis.performance_analyzer import PerformanceAnalyzer
-from src.visualization.plotter import Plotter
+### 1. 资金控制
+- 设置最大持仓金额
+- 设置单笔交易限额
+- 设置止损止盈点
 
-# 创建性能分析器
-analyzer = PerformanceAnalyzer()
-performance = analyzer.analyze(results)
+### 2. 持仓控制
+- 设置最大持仓数量
+- 设置单个股票持仓比例
+- 设置行业持仓比例
 
-# 创建可视化工具
-plotter = Plotter()
-plotter.plot_strategy_performance(results)
-```
+### 3. 风险监控
+- 监控回撤情况
+- 监控波动率
+- 监控相关性
 
-## 4. 实盘交易
+## 六、日志管理
 
-### 4.1 启动交易系统
+### 1. 查看日志
+- 系统日志：`logs/system.log`
+- 交易日志：`logs/trading.log`
+- 错误日志：`logs/error.log`
 
-```python
-from src.trading.trading_engine import TradingEngine
-from src.brokers.broker_factory import BrokerFactory
+### 2. 日志级别
+- DEBUG：调试信息
+- INFO：一般信息
+- WARNING：警告信息
+- ERROR：错误信息
+- CRITICAL：严重错误
 
-# 创建券商接口
-broker = BrokerFactory.create_broker('xtp', config)
+## 七、最佳实践
 
-# 创建交易引擎
-engine = TradingEngine(
-    strategy_manager=strategy_manager,
-    broker=broker,
-    risk_manager=risk_manager
-)
+### 1. 策略开发
+- 先进行充分的回测
+- 注意风险控制
+- 避免过度拟合
+- 定期优化策略
 
-# 启动交易
-engine.start()
-```
+### 2. 实盘交易
+- 先用小资金测试
+- 密切监控系统运行
+- 及时处理异常情况
+- 定期检查风险指标
 
-### 4.2 监控交易状态
+### 3. 系统维护
+- 定期更新数据
+- 检查系统日志
+- 备份重要数据
+- 更新依赖包
 
-```python
-# 获取账户信息
-account_info = broker.get_account_info()
+## 八、常见问题
 
-# 获取持仓信息
-positions = broker.get_positions()
+### 1. 数据问题
+- 数据获取失败
+- 数据格式错误
+- 数据延迟
 
-# 获取订单状态
-orders = broker.get_orders()
-```
+### 2. 交易问题
+- 下单失败
+- 撤单失败
+- 持仓异常
 
-## 5. 风险管理
+### 3. 系统问题
+- 系统崩溃
+- 内存不足
+- 网络断开
 
-### 5.1 配置风险参数
+## 九、获取帮助
 
-```python
-from src.risk.risk_manager import RiskManager
-
-risk_config = {
-    'max_position_size': 5000,
-    'max_capital': 100000,
-    'max_drawdown': 0.1,
-    'position_limit': 1000,
-    'volatility_limit': 0.2,
-    'correlation_limit': 0.7
-}
-
-risk_manager = RiskManager(risk_config)
-```
-
-### 5.2 风险监控
-
-```python
-# 获取风险指标
-risk_metrics = risk_manager.get_risk_metrics()
-
-# 检查交易风险
-is_safe = risk_manager.check_risk(strategy, signal)
-
-# 更新风险指标
-risk_manager.update_risk_metrics(trade)
-```
-
-## 6. 日志管理
-
-### 6.1 配置日志
-
-```python
-from src.utils.logger import Logger
-
-logger = Logger(
-    log_dir='logs',
-    log_level=logging.INFO,
-    log_format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-```
-
-### 6.2 记录日志
-
-```python
-# 记录交易信息
-logger.log_trade(trade)
-
-# 记录持仓信息
-logger.log_position(position)
-
-# 记录风险指标
-logger.log_risk(risk_metrics)
-
-# 记录策略信号
-logger.log_strategy(strategy_name, signal)
-
-# 记录性能指标
-logger.log_performance(performance)
-
-# 记录错误信息
-logger.log_error(error, context)
-```
-
-## 7. 最佳实践
-
-### 7.1 策略开发
-
-1. 使用模块化设计
-2. 实现完整的风险控制
-3. 添加详细的日志记录
-4. 进行充分的回测验证
-5. 使用配置文件管理参数
-
-### 7.2 实盘交易
-
-1. 先进行模拟交易
-2. 从小资金开始
-3. 实时监控风险
-4. 定期检查系统状态
-5. 做好数据备份
-
-### 7.3 系统维护
-
-1. 定期更新依赖包
-2. 检查日志文件
-3. 清理临时文件
-4. 备份重要数据
-5. 监控系统资源 
+- 查看详细文档：`docs/` 目录
+- 提交问题：在GitHub上创建Issue
+- 加入讨论：项目Discussions页面 

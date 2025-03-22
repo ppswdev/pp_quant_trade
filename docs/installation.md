@@ -1,173 +1,118 @@
 # 安装和配置指南
 
-## 1. 环境要求
+## 一、系统要求
 
-- Python 3.8+
-- pip 20.0+
-- Git
+### 1. 硬件要求
+- 电脑：Windows 10/11、MacOS或Linux系统
+- 内存：至少4GB
+- 硬盘：至少10GB可用空间
+- 网络：稳定的互联网连接
 
-## 2. 安装步骤
+### 2. 软件要求
+- Python 3.8或更高版本
+- pip（Python包管理器）
+- Git（用于下载系统）
 
-### 2.1 克隆项目
+## 二、安装步骤
 
+### 1. 安装Python
+1. 访问 [Python官网](https://www.python.org/downloads/)
+2. 下载Python 3.8或更高版本
+3. 运行安装程序
+4. 重要：安装时请勾选"Add Python to PATH"选项
+5. 完成安装
+
+### 2. 下载系统
+1. 打开命令行（终端）
+2. 进入您想安装系统的目录
+3. 运行以下命令：
 ```bash
-git clone https://github.com/yourusername/pp_quant_trade.git
+git clone https://github.com/ppswdev/pp_quant_trade.git
 cd pp_quant_trade
 ```
 
-### 2.2 创建虚拟环境
-
+### 3. 安装系统依赖
+1. 创建虚拟环境（推荐）：
 ```bash
+# Windows系统：
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# 或
-venv\Scripts\activate  # Windows
+venv\Scripts\activate
+
+# Mac/Linux系统：
+python -m venv venv
+source venv/bin/activate
 ```
 
-### 2.3 安装依赖
-
+2. 安装依赖包：
 ```bash
 pip install -r requirements.txt
 ```
 
-## 3. 配置说明
+## 三、配置系统
 
-### 3.1 数据源配置
+### 1. 配置数据源
+1. 打开 `config/data_config.yaml` 文件
+2. 选择您要使用的数据源（如Tushare）
+3. 填入您的账号信息（如Tushare的token）
+4. 保存文件
 
-在 `config/data_config.yaml` 中配置数据源参数：
+### 2. 配置券商接口
+1. 打开 `config/broker_config.yaml` 文件
+2. 选择您要使用的券商（如XTP）
+3. 填入您的券商账号信息
+4. 保存文件
 
-```yaml
-data_sources:
-  tushare:
-    token: "your_tushare_token"
-  akshare:
-    timeout: 30
-  baostock:
-    username: "your_username"
-    password: "your_password"
-```
+### 3. 配置交易策略
+1. 打开 `config/strategy_config.yaml` 文件
+2. 选择您要使用的策略
+3. 调整策略参数
+4. 保存文件
 
-### 3.2 券商接口配置
+### 4. 配置风险控制
+1. 打开 `config/risk_config.yaml` 文件
+2. 设置风险控制参数
+3. 保存文件
 
-在 `config/broker_config.yaml` 中配置券商接口参数：
+## 四、验证安装
 
-```yaml
-brokers:
-  xtp:
-    client_id: 1
-    server_ip: "127.0.0.1"
-    server_port: 6001
-    username: "your_username"
-    password: "your_password"
-  eastmoney:
-    account: "your_account"
-    password: "your_password"
-  ths:
-    server: "127.0.0.1"
-    port: 7708
-    account: "your_account"
-    password: "your_password"
-  tdx:
-    server: "127.0.0.1"
-    port: 7709
-    account: "your_account"
-    password: "your_password"
-```
-
-### 3.3 策略配置
-
-在 `config/strategy_config.yaml` 中配置策略参数：
-
-```yaml
-strategies:
-  ma_cross:
-    enabled: true
-    short_period: 5
-    long_period: 20
-    position_size: 100
-  breakout:
-    enabled: true
-    period: 20
-    threshold: 0.02
-    position_size: 100
-  mean_reversion:
-    enabled: true
-    period: 20
-    std_dev: 2
-    position_size: 100
-```
-
-### 3.4 风险控制配置
-
-在 `config/risk_config.yaml` 中配置风险控制参数：
-
-```yaml
-risk_control:
-  max_position_size: 5000
-  max_capital: 100000
-  max_drawdown: 0.1
-  position_limit: 1000
-  volatility_limit: 0.2
-  correlation_limit: 0.7
-```
-
-## 4. 使用说明
-
-### 4.1 启动系统
-
+### 1. 运行测试
 ```bash
-python main.py
+python -m pytest tests/
 ```
 
-### 4.2 运行回测
-
+### 2. 运行示例
 ```bash
+# 运行回测示例
 python -m src.backtest.run_backtest --strategy ma_cross --start_date 2020-01-01 --end_date 2023-12-31
 ```
 
-### 4.3 实盘交易
+## 五、常见问题
 
-```bash
-python -m src.trading.run_trading --strategy ma_cross --broker xtp
-```
+### 1. 安装问题
+- 如果提示"python不是内部或外部命令"，请检查Python是否正确安装并添加到PATH
+- 如果安装依赖包时出错，请检查网络连接
+- 如果提示权限错误，请使用管理员权限运行命令
 
-## 5. 常见问题
+### 2. 配置问题
+- 确保配置文件中的账号信息正确
+- 检查文件路径是否正确
+- 确保配置文件格式正确（YAML格式）
 
-### 5.1 数据获取失败
+### 3. 运行问题
+- 确保Python环境已激活（命令提示符前有(venv)）
+- 检查日志文件了解详细错误信息
+- 确保所有依赖包都已正确安装
 
-- 检查网络连接
-- 验证数据源配置是否正确
-- 确认API密钥是否有效
+## 六、获取帮助
 
-### 5.2 券商接口连接失败
+- 查看详细文档：`docs/` 目录
+- 提交问题：在GitHub上创建Issue
+- 加入讨论：项目Discussions页面
 
-- 检查券商交易软件是否正常运行
-- 验证账号密码是否正确
-- 确认网络连接是否正常
+## 七、安全提示
 
-### 5.3 策略运行异常
-
-- 检查策略配置是否正确
-- 验证数据格式是否符合要求
-- 查看日志文件定位问题
-
-## 6. 更新和维护
-
-### 6.1 更新系统
-
-```bash
-git pull
-pip install -r requirements.txt
-```
-
-### 6.2 日志管理
-
-- 日志文件位于 `logs/` 目录
-- 按日期自动分割
-- 可通过 `config/log_config.yaml` 配置日志级别和格式
-
-### 6.3 数据备份
-
-- 定期备份 `data/` 目录下的数据文件
-- 备份配置文件
-- 备份日志文件 
+- 请妥善保管您的账号信息
+- 不要将包含账号信息的配置文件上传到GitHub
+- 定期更新系统和依赖包
+- 实盘交易前请充分测试
+- 建议先使用小资金测试 
