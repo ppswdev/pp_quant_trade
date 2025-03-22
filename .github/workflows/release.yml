@@ -2,20 +2,19 @@ name: Release
 
 on:
   push:
+    branches: [main]
     tags:
       - "v*"
 
 jobs:
-  release:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -26,6 +25,13 @@ jobs:
 
       - name: Build package
         run: python -m build
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*
 
       - name: Create Release
         id: create_release
@@ -47,10 +53,3 @@ jobs:
           asset_path: ./dist/*.whl
           asset_name: pp_quant_trade-${{ github.ref_name }}.whl
           asset_content_type: application/x-wheel+zip
-
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m twine upload dist/*
